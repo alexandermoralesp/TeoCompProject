@@ -16,6 +16,8 @@ class Automata:
         for state in end_state_list:
             self.adjacency_matrix[state][normalized_end_index] = "" # Epsilon transition
 
+        # TODO: AGREGAR NORMALIZACION de doble transicion
+
 
     def add_transition(self, state, transition, next):
         self.adjacency_matrix[state][next] = str(transition)
@@ -52,9 +54,10 @@ class Automata:
                     else:
                         self.adjacency_matrix[i][o] = "(" + self.adjacency_matrix[i][s] + loop + self.adjacency_matrix[s][o] + "+" + self.adjacency_matrix[i][o]+ ")" 
             
-
-
         return self.adjacency_matrix[n-2][n-1]
+
+        # TODO: CASO ESQUINA: Cuando le automata no tiene estados finales
+        # Normalizacion
 
 def main():
     line = input().split()
