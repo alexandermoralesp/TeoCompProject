@@ -1,6 +1,7 @@
 
 class Automata:
     def __init__(self, n, start_state, end_state_list):
+                
         # Create Adjacency Matrix
         self.adjacency_matrix = [[None for i in range(n+2)] for j in range(n+2)]
         
@@ -15,12 +16,14 @@ class Automata:
         self.adjacency_matrix[normalized_start_index][start_state] = "" # Epsilon
         for state in end_state_list:
             self.adjacency_matrix[state][normalized_end_index] = "" # Epsilon transition
-
-        # TODO: AGREGAR NORMALIZACION de doble transicion
-
+        
 
     def add_transition(self, state, transition, next):
-        self.adjacency_matrix[state][next] = str(transition)
+        if self.adjacency_matrix[state][next] is None:
+            self.adjacency_matrix[state][next] = str(transition)
+        else:
+            # Completado: NORMALIZACION de doble transicion
+            self.adjacency_matrix[state][next] = str(transition)+"+"+self.adjacency_matrix[state][next]
 
     def display(self):
         print(end="\t")
@@ -56,29 +59,30 @@ class Automata:
             
         return self.adjacency_matrix[n-2][n-1]
 
-        # TODO: CASO ESQUINA: Cuando le automata no tiene estados finales
-        # Normalizacion
-
 def main():
     line = input().split()
     n = int(line[0])
     start = int(line[1])
     end_list = [int(line[i+3]) for i in range( int(line[2]) )]
 
-    automata = Automata(n, start, end_list)
-    automata.display()
+    if end_list:
 
-    for i in range(2*n ):
-        line = input().split()
-        state = int(line[0])
-        transition = str(line[1])
-        next = int(line[2])
-        automata.add_transition(state, transition, next)
-    
-    automata.display()
+        automata = Automata(n, start, end_list)
+        automata.display()
 
-    regex = automata.get_regular_expression()
-    automata.display()
+        for i in range(2*n ):
+            line = input().split()
+            state = int(line[0])
+            transition = str(line[1])
+            next = int(line[2])
+            automata.add_transition(state, transition, next)
+        
+        automata.display()
+        regex = automata.get_regular_expression()
+    else:
+        # COMPLETADO: CASO ESQUINA: Cuando le automata no tiene estados finales
+        regex = None
+
     print("REGEX:",regex)
 
 
