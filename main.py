@@ -11,8 +11,6 @@ class Automata:
         normalized_start_index = n
         normalized_end_index = n+1
 
-        print(start_state)
-        print(normalized_start_index)
         self.adjacency_matrix[normalized_start_index][start_state] = "" # Epsilon
         for state in end_state_list:
             self.adjacency_matrix[state][normalized_end_index] = "" # Epsilon transition
@@ -42,16 +40,13 @@ class Automata:
 
         for s in range( n ):
             # s = estado a remover
-            print("S:"+str(s))
             loop = str("("+self.adjacency_matrix[s][s]+")*") if self.adjacency_matrix[s][s] !=None else ""
-            print("LOOP:"+loop)
 
             in_transitions = [i for i in range(s+1,n) if self.adjacency_matrix[i][s] is not None]
             out_transitions = [o for o in range(s+1,n) if self.adjacency_matrix[s][o] is not None]
 
             for i in in_transitions:
                 for o in out_transitions:
-                    print((i,o))
                     if self.adjacency_matrix[i][o] is None:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][s] + loop +  self.adjacency_matrix[s][o] 
                     else:
@@ -68,8 +63,7 @@ def main():
     if end_list:
 
         automata = Automata(n, start, end_list)
-        automata.display()
-
+        
         for i in range(2*n ):
             line = input().split()
             state = int(line[0])
@@ -77,10 +71,11 @@ def main():
             next = int(line[2])
             automata.add_transition(state, transition, next)
         
-        automata.display()
         regex = automata.get_regular_expression()
     else:
         # COMPLETADO: CASO ESQUINA: Cuando le automata no tiene estados finales
+        for i in range(2*n ):
+            line = input()
         regex = None
 
     print("REGEX:",regex)
