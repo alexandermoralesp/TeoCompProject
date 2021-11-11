@@ -18,8 +18,8 @@ class Automata:
             self.adjacency_matrix[state][normalized_end_index] = "" # Epsilon transition
         
 
-    def add_transition(self, state, transition, next):
-        if self.adjacency_matrix[state][next] is None:
+    def add_transition(self, state, transition, next): # Método para añadir un estado al automata
+        if self.adjacency_matrix[state][next] is None: 
             self.adjacency_matrix[state][next] = str(transition)
         else:
             # Completado: NORMALIZACION de doble transicion
@@ -60,22 +60,22 @@ class Automata:
         return self.adjacency_matrix[n-2][n-1]
 
 def main():
-    line = input().split()
-    n = int(line[0])
-    start = int(line[1])
-    end_list = [int(line[i+3]) for i in range( int(line[2]) )]
+    line = input().split() # Linea de ingreso de valores de primera fila
+    n = int(line[0]) # Definir cuantos estados habrán
+    start = int(line[1]) # Definir estado inicial
+    end_list = [int(line[i+3]) for i in range( int(line[2]) )] # Dar los ids de los estados finales
 
-    if end_list:
+    if end_list: # Si existen estados finales
 
-        automata = Automata(n, start, end_list)
-        automata.display()
+        automata = Automata(n, start, end_list) # Creamos la clase automata 
+        automata.display() 
 
-        for i in range(2*n ):
-            line = input().split()
-            state = int(line[0])
-            transition = str(line[1])
-            next = int(line[2])
-            automata.add_transition(state, transition, next)
+        for i in range(2*n ): # Bucle para las siguientes 2n filas
+            line = input().split() # Fila de transicion estilo  "estado" "entrada" "siguiente estado"
+            state = int(line[0]) # Extracción del estado
+            transition = str(line[1]) # Extracción del caracter ingresado
+            next = int(line[2]) # Extraccion del siguiente estado
+            automata.add_transition(state, transition, next) # Se añade la transicion al automata
         
         automata.display()
         regex = automata.get_regular_expression()
@@ -83,7 +83,7 @@ def main():
         # COMPLETADO: CASO ESQUINA: Cuando le automata no tiene estados finales
         regex = None
 
-    print("REGEX:",regex)
+    print("REGEX:",regex) # Se imprime la expresión regular
 
 
 main()
