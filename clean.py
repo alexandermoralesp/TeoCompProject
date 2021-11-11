@@ -40,17 +40,26 @@ class Automata:
 
         for s in range( n ):
             # s = estado a remover
-            loop = str("("+self.adjacency_matrix[s][s]+")*") if self.adjacency_matrix[s][s] !=None else ""
 
+            # Declarando elemento de loop (*)
+            if self.adjacency_matrix[s][s] is None:
+                loop = ""
+            elif len(self.adjacency_matrix[s][s]) == 1 or self.adjacency_matrix[s][s][0] == "(":
+                loop = str(self.adjacency_matrix[s][s]) + "*"
+            else:
+                loop = "("+str(self.adjacency_matrix[s][s])+")*"
+
+            # Lista de todas las entras y salidas validas
             in_transitions = [i for i in range(s+1,n) if self.adjacency_matrix[i][s] is not None]
             out_transitions = [o for o in range(s+1,n) if self.adjacency_matrix[s][o] is not None]
 
+            # Combinacion de todas las entradas validas con todas las salidas valdias
             for i in in_transitions:
                 for o in out_transitions:
                     if self.adjacency_matrix[i][o] is None:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][s] + loop +  self.adjacency_matrix[s][o] 
                     else:
-                        self.adjacency_matrix[i][o] = "(" + self.adjacency_matrix[i][s] + loop + self.adjacency_matrix[s][o] + "+" + self.adjacency_matrix[i][o]+ ")" 
+                        self.adjacency_matrix[i][o] = "(" + self.adjacency_matrix[i][o] + "+" + self.adjacency_matrix[i][s] + loop + self.adjacency_matrix[s][o] + ")" 
             
         return self.adjacency_matrix[n-2][n-1]
 
@@ -82,3 +91,5 @@ def main():
 
 
 main()
+
+
