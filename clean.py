@@ -87,7 +87,7 @@ def main():
             line = input()
         regex = None
 
-    print("REGEX:",regex) # Se imprime la expresión regular
+    print(regex) # Se imprime la expresión regular
 
 
 main()
