@@ -17,7 +17,7 @@ def main():
     ## PROCESAMIENTO
     if end_list: # Si existen estados finales
         automata = Automata(n, start, end_list, transition_list) # Creamos la clase automata    
-        regex = automata.get_regular_expression_NCE() # Obtenemos la regex
+        regex = automata.get_regular_expression_NCD() # Obtenemos la regex
     else:
         # COMPLETADO: CASO ESQUINA: Se sabe que el regex es nulo si no hay estados finales
         regex = None

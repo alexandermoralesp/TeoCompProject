@@ -225,5 +225,43 @@ class Automata:
         return self.adjacency_matrix[n-2][n-1]
 
 
-    def get_regular_expression_NCD():
-        pass
+    def get_regular_expression_NCD(self):
+        print("NCD")
+        # List of active states and iterable states
+        n = len(self.adjacency_matrix)
+        active_states = [i for i in range(n-2)]
+        iterbale_states = [i for i in range(n)]
+
+        # Delete
+        for r in range(len(active_states)):
+            # Count cycles and get deletion order O(n^2)
+            cycles_count_dict = self.count_cycles(active_states)
+            s = min(cycles_count_dict, key=cycles_count_dict.get)
+            print(s)
+            # s = estado a remover
+
+            # Declarando elemento de loop (*)
+            if self.adjacency_matrix[s][s] is None:
+                loop = RegularExp("", False)
+            else:
+                loop = self.adjacency_matrix[s][s].star()
+
+            # Delete currently deleting from iterables
+            iterbale_states.remove(s)
+
+            # Lista de todas las entras y salidas validas
+            in_transitions = [i for i in iterbale_states if self.adjacency_matrix[i][s] is not None]
+            out_transitions = [o for o in iterbale_states if self.adjacency_matrix[s][o] is not None]
+
+            # Combinacion de todas las entradas validas con todas las salidas valdias
+            for i in in_transitions:
+                for o in out_transitions:
+                    if self.adjacency_matrix[i][o] is None:
+                        self.adjacency_matrix[i][o] = self.adjacency_matrix[i][s] ^ loop ^  self.adjacency_matrix[s][o] 
+                    else:
+                        self.adjacency_matrix[i][o] = self.adjacency_matrix[i][o] +  (self.adjacency_matrix[i][s] ^ loop ^ self.adjacency_matrix[s][o])
+            
+            # Delete currently deleting from active
+            active_states.remove(s)
+
+        return self.adjacency_matrix[n-2][n-1]
