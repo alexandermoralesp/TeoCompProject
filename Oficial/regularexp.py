@@ -41,3 +41,6 @@ class RegularExp:
 
     def __str__(self):
         return self.regex
+
+    def __len__(self):
+        return len(self.regex)
