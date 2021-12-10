@@ -157,7 +157,7 @@ class Automata:
             # O(v+e) = O(v+2v) = O(v) = O(n): DFS counting cycles
             loops = {i:None for i in ady_list}
             loops[node] = True
-            count = self.count_cycle_dfs(ady_list, loops, node, node, 0)
+            count, _ = self.count_cycle_dfs(ady_list, loops, node, node, 0)
             # Save
             count_dict[node] = count
         return count_dict
@@ -171,7 +171,9 @@ class Automata:
         for s in ady_list[node]:
             if loops[s] is None: 
                 # Needs to be explored
-                count = self.count_cycle_dfs(ady_list, loops, s, objective, count)
+                count, temp = self.count_cycle_dfs(ady_list, loops, s, objective, count)
+                if (temp):
+                    current_loops = True
             elif loops[s] is True: 
                 # Next node loops
                 count += 1
@@ -183,4 +185,45 @@ class Automata:
         if (objective != node):
             loops[node] = current_loops
         # Return count
-        return count
+        return count, loops[node]
+
+    def get_regular_expression_NCE(self):
+        # List of active states and iterable states
+        n = len(self.adjacency_matrix)
+        active_states = [i for i in range(n-2)]
+        iterbale_states = [i for i in range(n)]
+
+        # Count cycles and get deletion order O(n^2)
+        cycles_count_dict = self.count_cycles(active_states)
+        cycles_count_list = sorted(cycles_count_dict, key=cycles_count_dict.get)
+
+        # Delete
+        for s in cycles_count_list:
+            # s = estado a remover
+
+            # Declarando elemento de loop (*)
+            if self.adjacency_matrix[s][s] is None:
+                loop = RegularExp("", False)
+            else:
+                loop = self.adjacency_matrix[s][s].star()
+
+            # Delete currently deleting from iterables
+            iterbale_states.remove(s)
+
+            # Lista de todas las entras y salidas validas
+            in_transitions = [i for i in iterbale_states if self.adjacency_matrix[i][s] is not None]
+            out_transitions = [o for o in iterbale_states if self.adjacency_matrix[s][o] is not None]
+
+            # Combinacion de todas las entradas validas con todas las salidas valdias
+            for i in in_transitions:
+                for o in out_transitions:
+                    if self.adjacency_matrix[i][o] is None:
+                        self.adjacency_matrix[i][o] = self.adjacency_matrix[i][s] ^ loop ^  self.adjacency_matrix[s][o] 
+                    else:
+                        self.adjacency_matrix[i][o] = self.adjacency_matrix[i][o] +  (self.adjacency_matrix[i][s] ^ loop ^ self.adjacency_matrix[s][o])
+            
+        return self.adjacency_matrix[n-2][n-1]
+
+
+    def get_regular_expression_NCD():
+        pass
