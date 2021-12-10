@@ -78,6 +78,11 @@ class Automata:
         iterbale_states = [i for i in range(n)]
 
         for s in range( n - 2):
+            ## TEST LOOP COUNTING:
+            #print(self.count_cycles(active_states))
+            #print("\n\n\n\n\n")
+
+
             # Get state of minimum weight
             minimum_weight_state = None
             minimum_weight_value = None
@@ -136,3 +141,46 @@ class Automata:
             active_states.remove(s)
 
         return self.adjacency_matrix[n-2][n-1]
+
+    # PREGUNTA 3:
+    def count_cycles(self, iterbale_states):
+        # O(n^2): Adycacency list
+        ady_list = {a:[] for a in iterbale_states}
+        for i in iterbale_states:
+            for o in iterbale_states:
+                if (self.adjacency_matrix[i][o] is not None):
+                    ady_list[i].append(o)
+
+        # O(n)*O(n) = O(n^2): Counting por estado
+        count_dict = {}       
+        for node in iterbale_states:
+            # O(v+e) = O(v+2v) = O(v) = O(n): DFS counting cycles
+            loops = {i:None for i in ady_list}
+            loops[node] = True
+            count = self.count_cycle_dfs(ady_list, loops, node, node, 0)
+            # Save
+            count_dict[node] = count
+        return count_dict
+
+    def count_cycle_dfs(self, ady_list, loops, node, objective, count):
+        # Temporarily set current node as dead end (Unless it is origin)
+        if (objective != node):
+            loops[node] = False
+            current_loops = False
+        # Loop
+        for s in ady_list[node]:
+            if loops[s] is None: 
+                # Needs to be explored
+                count = self.count_cycle_dfs(ady_list, loops, s, objective, count)
+            elif loops[s] is True: 
+                # Next node loops
+                count += 1
+                current_loops = True
+            else: #loops[s] is False: 
+                # Next node is dead end
+                pass
+        # Set current node to appropiate loop status
+        if (objective != node):
+            loops[node] = current_loops
+        # Return count
+        return count
