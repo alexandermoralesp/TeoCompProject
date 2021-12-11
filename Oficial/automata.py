@@ -226,7 +226,6 @@ class Automata:
 
 
     def get_regular_expression_NCD(self):
-        print("NCD")
         # List of active states and iterable states
         n = len(self.adjacency_matrix)
         active_states = [i for i in range(n-2)]
@@ -237,7 +236,6 @@ class Automata:
             # Count cycles and get deletion order O(n^2)
             cycles_count_dict = self.count_cycles(active_states)
             s = min(cycles_count_dict, key=cycles_count_dict.get)
-            print(s)
             # s = estado a remover
 
             # Declarando elemento de loop (*)
