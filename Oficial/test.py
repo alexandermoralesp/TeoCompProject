@@ -1,5 +1,6 @@
 import random
 import time
+import csv
 
 from automata import Automata
 from solve import solve
@@ -53,34 +54,52 @@ def test_compare_performance(min, max):
     print("--------------")
     print("EXECUTING:")
     print("--------------")
-    for i in range(min, max):
+    for i in range(min, max+1):
         k = i
         print("Procesando con k={}".format(k))
         algo_time_len = k_states_compare_performance(k, 1000)
         metrics_list.append( (k, algo_time_len) )
 
-    # PRINT RESULTS
+    # PRINT & SAVE RESULTS
     print()
     print("--------------")
     print("RESULTS:")
     print("--------------")
+
+    algos = [algo for algo, _, _ in  metrics_list[1][1]]
+    header = ["k",]
+    header.extend(algos)
+
     # Dispaly time
-    print("TIME")
-    for k, metr in metrics_list:
-        print(k, end="\t")
-        for _, time, _ in metr:
-            print(time, end="\t")
-        print()
+    with open('time_result.csv', 'w', newline="") as f:     
+        writer = csv.writer(f)
+        writer.writerow(header)
+        print("TIME")
+        for k, metr in metrics_list:
+            data = [k,]
+            print(k, end="\t")
+            for _, time, _ in metr:
+                data.append(time)
+                print(time, end="\t")
+            writer.writerow(data)
+            print()
+
 
     # Dispaly length
-    print("LENGTH")
-    for k, metr in metrics_list:
-        print(k, end="\t")
-        for _, _, lenght in metr:
-            print(lenght, end="\t")
-        print()
+    with open('length_result.csv', 'w', newline="") as f:  
+        writer = csv.writer(f)
+        writer.writerow(header)
+        print("LENGTH")
+        for k, metr in metrics_list:
+            data = [k,]
+            print(k, end="\t")
+            for _, _, lenght in metr:
+                data.append(lenght)
+                print(lenght, end="\t")
+            writer.writerow(data)
+            print()
 
 
 
 if __name__ == "__main__":
-    test_compare_performance(1, 10)
+    test_compare_performance(0,16)

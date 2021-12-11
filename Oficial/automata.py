@@ -1,10 +1,10 @@
 from regularexp import RegularExp
 
 class Automata:
-    AEE_algo = 0
-    HDM_algo = 1
-    NCE_algo = 2
-    NCD_algo = 3
+    AEE_algo = "AEE"
+    HDM_algo = "HDM"
+    NCE_algo = "NCE"
+    NCD_algo = "NCD"
 
     def __init__(self, n, start_state, end_state_list, transition_list):
                 
