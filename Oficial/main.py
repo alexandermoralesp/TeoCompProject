@@ -21,5 +21,5 @@ def main():
     ## OUTPUT
     print(regex) # Se imprime la expresión regular
 
-
-main()
+if __name__ == "__main__":
+    main()
