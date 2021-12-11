@@ -1,4 +1,5 @@
 from automata import Automata
+from solve import solve
 
 def main():
     ## INPUTS
@@ -13,14 +14,9 @@ def main():
         transition = str(line[1]) # Extracción del caracter ingresado
         next = int(line[2]) # Extraccion del siguiente estado
         transition_list.append( (state, transition, next) ) # Se añade la transicion a la lista de transiciones del automata
-
-    ## PROCESAMIENTO
-    if end_list: # Si existen estados finales
-        automata = Automata(n, start, end_list, transition_list) # Creamos la clase automata    
-        regex = automata.get_regular_expression_NCD() # Obtenemos la regex
-    else:
-        # COMPLETADO: CASO ESQUINA: Se sabe que el regex es nulo si no hay estados finales
-        regex = None
+    
+    ## PROCESS
+    regex = solve(n, start, end_list, transition_list, Automata.NCD_algo)
 
     ## OUTPUT
     print(regex) # Se imprime la expresión regular

@@ -1,6 +1,11 @@
 from regularexp import RegularExp
 
 class Automata:
+    AEE_algo = 0
+    HDM_algo = 1
+    NCE_algo = 2
+    NCD_algo = 3
+
     def __init__(self, n, start_state, end_state_list, transition_list):
                 
         # Create Adjacency Matrix
@@ -43,6 +48,21 @@ class Automata:
                 print( self.adjacency_matrix[i][j], end="\t")
             print()
     
+    # GENERAL CALL:
+    def get_regular_expression(self, algo):
+        if (algo==Automata.AEE_algo):
+            return self.get_regular_expression_AEE()
+        elif (algo==Automata.HDM_algo):
+            return self.get_regular_expression_HDM()
+        elif (algo==Automata.NCE_algo):
+            return self.get_regular_expression_NCE()
+        elif (algo==Automata.NCD_algo):
+            return self.get_regular_expression_NCD()
+        else:
+            print("Algoritmo escogido invalido")
+            return None
+
+
     # PREGUNTA 1:
     def get_regular_expression_AEE(self):
         n = len(self.adjacency_matrix)
