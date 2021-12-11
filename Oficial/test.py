@@ -47,10 +47,7 @@ def k_states_compare_performance(k, iterations):
     # Return
     return algo_time_len
             
-def test_compare_performance():
-    min = 1
-    max = 16
-
+def test_compare_performance(min, max):
     metrics_list = []
     print()
     print("--------------")
@@ -86,4 +83,4 @@ def test_compare_performance():
 
 
 if __name__ == "__main__":
-    test_compare_performance()
+    test_compare_performance(1, 10)
