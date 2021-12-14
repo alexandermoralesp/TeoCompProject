@@ -27,6 +27,9 @@ class Automata:
         # Inicializar transiciones
         for (state, transition, next) in transition_list:
             self.add_transition(state, transition, next)
+
+        # Contador de operaciones
+        self.operations = 0
         
     def add_transition(self, state, transition, next): # Método para añadir un estado al automata
         if self.adjacency_matrix[state][next] is None: 
@@ -87,6 +90,9 @@ class Automata:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][s] ^ loop ^  self.adjacency_matrix[s][o] 
                     else:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][o] +  (self.adjacency_matrix[i][s] ^ loop ^ self.adjacency_matrix[s][o])
+
+             # Contador de operaciones
+            self.operations += len(in_transitions) * len(out_transitions)
             
         return self.adjacency_matrix[n-2][n-1]
 
@@ -156,6 +162,8 @@ class Automata:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][s] ^ loop ^  self.adjacency_matrix[s][o] 
                     else:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][o] +  (self.adjacency_matrix[i][s] ^ loop ^ self.adjacency_matrix[s][o])
+             # Contador de operaciones
+            self.operations += len(in_transitions) * len(out_transitions)
 
             # Delete from lists
             active_states.remove(s)
@@ -207,6 +215,99 @@ class Automata:
         # Return count
         return count, loops[node]
 
+    def count_cycles_jhonson(self, iterbale_states):
+        # O(n^2): Adycacency list
+        ady_list = {a:[] for a in iterbale_states}
+        for i in iterbale_states:
+            for o in iterbale_states:
+                if (self.adjacency_matrix[i][o] is not None):
+                    ady_list[i].append(o)
+        # O((v+e) * c)
+        for start in iterbale_states:
+            # TODO: completar
+            return
+
+        
+
+
+    def count_cycles_fix(self, iterbale_states):
+        # O(n^2): Adycacency list
+        ady_list = {a:[] for a in iterbale_states}
+        for i in iterbale_states:
+            for o in iterbale_states:
+                if (self.adjacency_matrix[i][o] is not None):
+                    ady_list[i].append(o)
+
+        # O(n)*O(n) = O(n^2): Counting por estado
+        count_dict = {}       
+        for node in iterbale_states:
+            # O(v+e) = O(v+2v) = O(v) = O(n): DFS counting cycles
+            loops = {i:None for i in ady_list}
+            loops[node] = 1
+            count = self.count_cycle_dfs_fix(ady_list, loops, node, node)
+            # Save
+            count_dict[node] = count
+        return count_dict
+
+    def count_cycle_dfs_fix(self, ady_list, loops, node, objective):
+        # Temporarily set current node as dead end (Unless it is origin)
+        if (objective != node):
+            loops[node] = 0
+        current_loops = 0
+        
+        # Loop
+        for s in ady_list[node]:
+            if loops[s] is None: 
+                # Needs to be explored
+                child_loops = self.count_cycle_dfs_fix(ady_list, loops, s, objective)
+                current_loops += child_loops
+            elif loops[s] > 0: 
+                # Next node has N loops
+                current_loops += loops[s]
+            else: #loops[s] == 0: 
+                # Next node is dead end or would be a currently visiting node
+                pass
+        # Set current node to appropiate loop status
+        loops[node] = current_loops
+        # Return count
+        return loops[node]
+
+    def brute_force_count_cycles(self, iterbale_states):
+        # O(n^2): Adycacency list
+        ady_list = {a:[] for a in iterbale_states}
+        for i in iterbale_states:
+            for o in iterbale_states:
+                if (self.adjacency_matrix[i][o] is not None):
+                    ady_list[i].append(o)
+
+        # Counting por estado
+        count_dict = {}       
+        for node in iterbale_states:
+            # Brute force. Generate all not looping paths from node
+            path = []
+            count = self.brute_force_count_cycles_rec(ady_list, node, node, path)
+            # Save
+            count_dict[node] = count
+        return count_dict
+
+    def brute_force_count_cycles_rec(self, ady_list, node, objective, path):
+        # Loop
+        count = 0
+        for s in ady_list[node]:
+            if s in path:
+                pass # Already visited. Hence not a cycle for objective
+            elif (s == objective):
+                # End
+                count += 1
+            else:
+                # Generate path
+                path_extend = path + [s,]
+                count += self.brute_force_count_cycles_rec(ady_list, s, objective, path_extend) # Visit recursievly
+        # Return 
+        return count
+
+
+
     def get_regular_expression_NCE(self):
         # List of active states and iterable states
         n = len(self.adjacency_matrix)
@@ -241,7 +342,9 @@ class Automata:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][s] ^ loop ^  self.adjacency_matrix[s][o] 
                     else:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][o] +  (self.adjacency_matrix[i][s] ^ loop ^ self.adjacency_matrix[s][o])
-            
+            # Contador de operaciones
+            self.operations += len(in_transitions) * len(out_transitions)
+
         return self.adjacency_matrix[n-2][n-1]
 
 
@@ -279,6 +382,9 @@ class Automata:
                     else:
                         self.adjacency_matrix[i][o] = self.adjacency_matrix[i][o] +  (self.adjacency_matrix[i][s] ^ loop ^ self.adjacency_matrix[s][o])
             
+            # Contador de operaciones
+            self.operations += len(in_transitions) * len(out_transitions)
+
             # Delete currently deleting from active
             active_states.remove(s)
 

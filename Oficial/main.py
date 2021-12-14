@@ -16,7 +16,7 @@ def main():
         transition_list.append( (state, transition, next) ) # Se añade la transicion a la lista de transiciones del automata
     
     ## PROCESS
-    regex = solve(n, start, end_list, transition_list, Automata.NCD_algo)
+    regex, _ = solve(n, start, end_list, transition_list, Automata.NCD_algo)
 
     ## OUTPUT
     print(regex) # Se imprime la expresión regular
