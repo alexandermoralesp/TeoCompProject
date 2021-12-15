@@ -9,15 +9,15 @@ def generate_random_automata(n):
     # GENERATE TUPLE (start_state, end_state_list, transition_list)
 
     # Starting state
-    start_state = random.randint(0,n)
+    start_state = random.randint(0,n-1)
     # End states
-    n_end_states = random.randint(0,n)
+    n_end_states = random.randint(0,n-1)
     end_state_list= random.sample(range(0,n), n_end_states)
     # Transition list
     transition_list = []
     for i in range(n):
-        transition_list.append( (i,0, random.randint(0,n)) )
-        transition_list.append( (i,1, random.randint(0,n)) )        
+        transition_list.append( (i,0, random.randint(0,n-1)) )
+        transition_list.append( (i,1, random.randint(0,n-1)) )        
 
     # RETURN TUPLE
     return (start_state, end_state_list, transition_list)
@@ -118,4 +118,4 @@ def test_compare_performance(min, max):
 
 
 if __name__ == "__main__":
-    test_compare_performance(0,32)
+    test_compare_performance(1,16)

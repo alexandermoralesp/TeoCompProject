@@ -171,7 +171,7 @@ class Automata:
         return self.adjacency_matrix[n-2][n-1]
 
     # PREGUNTA 3:
-    def count_cycles(self, iterbale_states):
+    def count_cycles_(self, iterbale_states):
         # O(n^2): Adycacency list
         ady_list = {a:[] for a in iterbale_states}
         for i in iterbale_states:
@@ -222,12 +222,67 @@ class Automata:
             for o in iterbale_states:
                 if (self.adjacency_matrix[i][o] is not None):
                     ady_list[i].append(o)
-        # O((v+e) * c)
+        #print("\n\n\nADY LIST:", ady_list)
+        # O((v+e) * c): JHONSON ALL CYCLES
+        cycles_count = {a:0 for a in iterbale_states}
         for start in iterbale_states:
-            # TODO: completar
-            return
+            # Inicializar stack con inicio en start
+            stack = []
+            blocked_set = {}
+            blocked_map = {}
 
-        
+            # Rec jhonson
+            self.count_cycles_jhonson_rec(start, ady_list, stack, blocked_set, blocked_map, cycles_count)
+            # Al terminar de iterar con este valor en start. Eliminarlo del grafo
+            ady_list.pop(start)
+        return cycles_count
+
+    def count_cycles_jhonson_rec(self, current, adj_list, stack, blocked_set, blocked_map, cycles_count):
+        if not adj_list.get(current):
+            return        
+        # Actualizar data structures
+        stack.append(current)
+        blocked_set[current] = True
+        start = stack[0]
+        cycle = False
+        # Exploracion recursiva
+        for node in adj_list[current]:
+            #print("START:{} - current:{} -> node:{}".format(start, current, node))
+            #print("BLOCKED SET:", blocked_set)
+            #print("BLOCKED MAP:", blocked_map)
+            if node == start:
+                # Is cycle
+                #print( "CYCLE:", stack)
+                for i in stack:
+                    cycles_count[i] += 1
+                cycle = True 
+            elif blocked_set.get(node) is not True:
+                # Needs to be explore
+                if self.count_cycles_jhonson_rec(node, adj_list, stack, blocked_set, blocked_map, cycles_count):
+                    cycle = True
+        # End
+        if cycle:
+            self.unblock_rec(current, blocked_set, blocked_map)
+        else:
+            for node in adj_list[current]:
+                if node != current: # Edge case: Self cycles
+                    if blocked_map.get(node):
+                        blocked_map[node].append(current)
+                    else:
+                        blocked_map[node] = [current,]
+        stack.pop()
+        return cycle
+
+    def unblock_rec(self, current, blocked_set, blocked_map):
+        blocked_set[current] = False
+        if blocked_map.get(current):
+            while blocked_map[current] != []:
+                node = blocked_map[current].pop()
+                self.unblock_rec(node, blocked_set, blocked_map)
+
+
+            
+
 
 
     def count_cycles_fix(self, iterbale_states):
@@ -315,7 +370,7 @@ class Automata:
         iterbale_states = [i for i in range(n)]
 
         # Count cycles and get deletion order O(n^2)
-        cycles_count_dict = self.count_cycles(active_states)
+        cycles_count_dict = self.count_cycles_jhonson(active_states)
         cycles_count_list = sorted(cycles_count_dict, key=cycles_count_dict.get)
 
         # Delete
@@ -357,7 +412,7 @@ class Automata:
         # Delete
         for r in range(len(active_states)):
             # Count cycles and get deletion order O(n^2)
-            cycles_count_dict = self.count_cycles(active_states)
+            cycles_count_dict = self.count_cycles_jhonson(active_states)
             s = min(cycles_count_dict, key=cycles_count_dict.get)
             # s = estado a remover
 
