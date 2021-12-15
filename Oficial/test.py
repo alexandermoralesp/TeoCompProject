@@ -118,4 +118,4 @@ def test_compare_performance(min, max):
 
 
 if __name__ == "__main__":
-    test_compare_performance(1,16)
+    test_compare_performance(1,32)
