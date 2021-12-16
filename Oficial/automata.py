@@ -6,8 +6,9 @@ class Automata:
     NCE_algo = "NCE"
     NCD_algo = "NCD"
 
-    def __init__(self, n, start_state, end_state_list, transition_list):
-                
+    def __init__(self, n, start_state, end_state_list, transition_list, debug=False):
+        self.debug = debug
+
         # Create Adjacency Matrix
         self.adjacency_matrix = [[None for i in range(n+2)] for j in range(n+2)]
         # TRANSITION TUPLE
@@ -168,6 +169,10 @@ class Automata:
             # Delete from lists
             active_states.remove(s)
 
+            ### DEBUG:
+            if self.debug:
+                print("W of delete: {}".format(minimum_weight_value))
+
         return self.adjacency_matrix[n-2][n-1]
 
     # PREGUNTA 3:
@@ -235,6 +240,10 @@ class Automata:
             self.count_cycles_jhonson_rec(start, ady_list, stack, blocked_set, blocked_map, cycles_count)
             # Al terminar de iterar con este valor en start. Eliminarlo del grafo
             ady_list.pop(start)
+
+        ### DEBUG:
+        if self.debug:
+            print("Dict de cycle counts: {}".format(cycles_count))
         return cycles_count
 
     def count_cycles_jhonson_rec(self, current, adj_list, stack, blocked_set, blocked_map, cycles_count):

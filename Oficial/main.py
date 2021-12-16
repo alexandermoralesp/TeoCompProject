@@ -1,7 +1,7 @@
 from automata import Automata
 from solve import solve
 
-def main():
+def main(algo= Automata.NCD_algo, debug=False):
     ## INPUTS
     line = input().split() # Linea de ingreso de valores de primera fila
     n = int(line[0]) # Definir cuantos estados habrán
@@ -16,10 +16,10 @@ def main():
         transition_list.append( (state, transition, next) ) # Se añade la transicion a la lista de transiciones del automata
     
     ## PROCESS
-    regex, _ = solve(n, start, end_list, transition_list, Automata.NCD_algo)
+    regex, _ = solve(n, start, end_list, transition_list, algo, debug)
 
     ## OUTPUT
     print(regex) # Se imprime la expresión regular
 
 if __name__ == "__main__":
-    main()
+    main(Automata.HDM_algo, debug = True)
